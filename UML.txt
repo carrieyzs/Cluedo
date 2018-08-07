@@ -1,0 +1,66 @@
+class Game
+{
+  *->* Board board;
+  *->* Envelope envelope;
+  *->* Player player;
+}
+class Envelope
+{
+  
+}
+class Player
+{
+  *->* Move move;
+  *->* Hand hand;
+}
+class Move
+{
+}
+class Hand
+{
+  *->* Card card;
+}
+class Card
+{
+}
+class RoomCard
+{
+  isA Card;
+}
+class WeaponCard 
+{
+  isA Card;
+}
+class PlayerCard
+{
+  isA Card;
+}
+
+class Board
+{
+* ->*Room room;
+* ->* Square square;
+  
+}
+
+class Square
+{
+}
+
+class Room
+{
+  * ->* Door door;
+   * ->* Wall wall;
+   * ->* Weapon weapon;
+}
+
+class Door
+{
+  
+}
+class Weapon{
+  
+}
+class Wall
+{
+}
