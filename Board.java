@@ -80,6 +80,7 @@ public class Board {
 			// gets the next player's name as shown on the board
 			Scurrent = Player.PlayerToken.getNext(Scurrent);
 			SplayerName = Scurrent.name();
+
 		} else if (name.equals("-")) {
 			sq = new DoorSquare(name);
 		} else {
@@ -110,6 +111,8 @@ public class Board {
 		
 		return result;
 	}
+	
+	
 
 	/**
 	 *@return - String representation of this board
@@ -120,10 +123,26 @@ public class Board {
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				res += board[i][j].toString();
+				if (j == board[i].length-1) 
+					res += "\n";
+				
 			}
 			//res += "*";
 		}
 
 		return res;
+	}
+	
+	public int size() { 
+		int num = 0;
+		
+		for (int i=0; i<board.length; i++) {
+			for (int j=0; j<board[i].length; j++) {
+				if (board[i][j] != null)
+					num++;
+			}
+		}
+		
+		return num;
 	}
 }

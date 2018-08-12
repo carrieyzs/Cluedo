@@ -2,35 +2,62 @@
 
 /**
  * The Square class corresponds to the different types of Squares objects that make up the board.
- * There are PlainSquares, which are accessible(blank) or inaccessible(X).
- * The accessibility of the other Squares (StartingSquare, RoomSquare, DoorSquare) depends on players' positions
+ * The subclasses are PlainSquare, StartingSquare, RoomSquare and DoorSquare depends on players' positions
  * as the game progresses.
  * @author yangcarr
  */
 public abstract class Square {
 	protected String name;
+	protected Player player;
+	protected boolean isOccupied, isAccessible;
 
 	public Square(String name) {
 		this.name = name;
 	}
-
+	
+	// GETTERS
 	/**
-	 * Returns the initial representing the name of this Square, as stored in gameboard.txt.
+	 * Some squares are accessible, depending on the the progression of the game. 
+	 * @return - accessibility of this Square
 	 */
+	public abstract boolean isAccessible();	
+	
+	/**
+	 * @return - the initial representing the name of this Square(as stored in gameboard.txt)
+	 */
+	@Override
 	public String toString() {
+		// if the square is occupied, string is #, otherwise it is the name
 		return name;
 	}
-
+	
 	/**
-	 * 2 basic squares are those that the players can move onto.
-	 * Squares marked as 'X' are inaccessible. Blank squares and starting squares are accessible.
-	 * Other squares (those in a room and those with a door) have accessibility depending on the progression
-	 * of the game as other players move around the board.
-	 * @return
+	 * @return - whether a player currently occupies this Square
 	 */
-	public abstract boolean isAccessible();		// maybe not abstract? if a player occupies this square, then it isn't accessible
+	public boolean isOccupied(){
+		return player == null;
+	}
+	
+	/**
+	 * @return - the current player occupying this Square
+	 */
+	public Player getPlayer() {
+		return player;
+	}
+	
+	// SETTERS
+	/**
+	 * Indicates whether the current square is already occupied by another player.
+	 * A square that is occupied, is not accessible to any other players.
+	 * Used to move player from one Square to another.
+	 * @param flag
+	 */
+	public void setOccupied(boolean flag, Player p) {
+		player = p;
+		isOccupied = flag;
+		if (flag == true)
+			isAccessible = false;
+	}
+	
 
-	//public abstract Weapon getWeapon();
-
-	//public abstract Player getPlayer();
 }

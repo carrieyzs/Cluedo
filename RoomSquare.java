@@ -4,8 +4,6 @@ import java.util.Map;
 
 
 public class RoomSquare extends Square {
-	// Squares that are rooms are treated as one location
-	// so players can be placed anywhere in a room
 	public enum Room{
 		KITCHEN,
 		BALLROOM,
@@ -16,18 +14,25 @@ public class RoomSquare extends Square {
 		LOUNGE,
 		HALL,
 		STUDY;
+		
+		private boolean hasPlayer;
 	}
 
 	// fields
 	private static Map<String, Room> rooms;
-	private boolean isAccessible;
+	private Room room;
+	
 
 	public RoomSquare(String name) {
 		super(name);
 		rooms = new HashMap<String, Room>();
 		fillMap();
+		room = rooms.get(name);
 	}
 
+	/**
+	 * Links the RoomSquares to the corresponding Rooms
+	 */
 	private static final void fillMap() {
 		rooms.put("K", Room.KITCHEN);
 		rooms.put("B", Room.BALLROOM);
@@ -40,15 +45,23 @@ public class RoomSquare extends Square {
 		rooms.put("T", Room.STUDY);
 	}
 
-
+	// GETTERS
 	/**
-	 *
+	 * @return - the room corresponding to this RoomSquare
+	 */
+	public Room getRoom() {
+		return room;
+	}
+
+	
+	// SETTERS
+	
+	/**
+	 * 
 	 */
 	@Override
 	public boolean isAccessible() {
 		// if player is on the square, then the square is not accessible
 		return true;		// true for now
 	}
-
-	// get the room
 }
