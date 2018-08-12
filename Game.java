@@ -1,4 +1,8 @@
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -9,70 +13,86 @@ import java.util.Scanner;
  * @author Carrie
  */
 public class Game {
-	// Fields
-	private int num;			// number of players in game
-	private Board gameboard;
-
+	String state = "start";
+	
+	int numOfPlayers;
+	Map<Player, Player.PlayerToken> players;
+	Board gameboard;
+	List<Card> deck;
+	
 	/**
-	 * Creates a new game.
+	 * Generates a new game.
 	 */
-	public Game(){
-		// ask how many players
+	public Game() {
+		players = new HashMap<Player, Player.PlayerToken>();
+		deck = new ArrayList<Card>();
+		gameboard = new Board();
+		
+		// Get the number of players
+		System.out.println("Welcome to Cluedo!\nHow many players will there be?(minimum 3)\n");
+		Scanner reader = new Scanner(System.in);
+		
 		do {
 			try {
-				Scanner reader = new Scanner(System.in);
-				System.out.println("Enter no. of players: ");
-				num = reader.nextInt();
-				reader.close();
+				
+				System.out.print("Enter no. of players: ");
+				//numOfPlayers = reader.nextInt();		//catching InputMismatchException didn't handle str
+				String num = reader.next();
+				numOfPlayers = Integer.parseInt(num);
 			}
-			catch (InputMismatchException e) {
+			catch (NumberFormatException e) {			//catch (InputMismatchException e) {
 				System.out.println("Please enter number of players in valid numeric form!");
 			}
 		}
-		while (!validatePlayers(num));
-
-		gameboard = new Board();	// generate new board with player positions (initialise() method)
-		updateGame();			// draws the current game
-
-		// (randomly choose players?)
-		// start game (all the dice rolls and moves, etc)
-		// end game (print out message, stop the game?)
+		while (!validatePlayers(numOfPlayers));
+		
+		// At this point, will have correct no. of players
+		// So we can go ahead and set the players to the correct positions
+		for (int i=0; i<numOfPlayers; i++) {
+			System.out.println();
+			System.out.print("Player " + (i+1) + " name : "); // issue here: board doesn't read sq properly
+			StartingSquare characterSquare = gameboard.getStartingSquares().get(i);
+			Player p = new Player(reader.next(), characterSquare);
+			players.put(p, Player.PlayerToken.valueOf(characterSquare.getPlayerLabel()));
+		}
+		
+		reader.close();
+		initialise();			// Initialise the game
 	}
+	
 
 	/**
 	 * Checks whether the input from the user is valid for the game.
+	 * Number of players must be [3,6]
 	 * @param num - no. of players to check
 	 * @return
 	 */
 	public boolean validatePlayers(int num) {
-		if (num < 3 || num > 6) {		// number of players must be [3,6]
+		if (num < 3 || num > 6) {
 			System.out.println("Sorry! Only 3-6 players are allowed!");
 			return false;
 		}
 
 		return true;
 	}
-
-	public void updateGame() {
-		System.out.println(gameboard.toString());		// prints the board
-		// prints respective player's turn
-	}
-
-	/*
-	 * make a method to validate the state of the game each time?
-	 * - check only one envelope allowed
-	 * - check move is legal or not
-	 * - check the suggestions or accusations are valid(?)
-	 * - check if game is won(?)
+	
+	/**
+	 * Sets up the game to be played. 
+	 * The solution of the game is chosen and put in the envelope. The remaining deck of cards is then
+	 * shuffled and distributed to the players. 
 	 */
+	public void initialise() {
+		state = "play";					// The state of the game is now on playing mode
+		
+		
+	}
 
 	public static void main(String[] args) {
 		new Game();
-
 	}
 
 //==========================================================================================================
-// ENVELOPE CLASS
+// INNER CLASS (ENVELOPE)
 //==========================================================================================================
 	/**
 	 * Private inner class, Envelope, represents the envelope in the game that is used to store the 3 cards,
@@ -82,27 +102,19 @@ public class Game {
 	 */
 	private class Envelope{
 		// 3 Card fields
-
+		private Card weapon, character, room;
+		
 		/**
-		 * A new envelope stores the 3 cards containing the solution to the murder.
-		 * When a new envelope is made, it is hidden (in this case, placed on the center of the board).
+		 * Input 3 cards into the Envelope. Checks that the cards are WeaponCard, PlayerCard and RoomCard
+		 * types. 
+		 * @param weapon
+		 * @param character
+		 * @param room
 		 */
-		private Envelope() {		// Constructor takes in 3 cards and stores in fields
-
+		private Envelope(Card weapon, Card character, Card room) {
+			this.weapon = weapon;
+			this.character = character;
+			this.room = room;
 		}
-
-		/**
-		 * @return - contents of the envelope (the solution of the game)
-		 */
-		private String show() {
-			return "The crime was committed in the ROOM by PERSON with the WEAPON";
-		}
-
-		/**
-		 * Returns the string representation of the envelope
-		 */
-		private String getName() {
-			return "Case File CONFIDENTIAL";
-		}
-	}
+}
 }
