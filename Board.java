@@ -1,10 +1,9 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Board {
+	// 25 down, 24 across
 	public static final int WIDTH = 24;
 	public static final int HEIGHT = 25;
 
@@ -16,10 +15,14 @@ public class Board {
 	Player.PlayerToken Scurrent = Player.PlayerToken.valueOf(SplayerName);
 
 	public Board() {
-		board = new Square[25][24];			// 25 down, 24 across
+		board = new Square[HEIGHT][WIDTH];			
 		createNewBoard();
 	}
 
+	/**
+	 * Method initialises the board field. 
+	 * The gameboard.txt file is read, Squares are generated and added into it.
+	 */
 	private void createNewBoard() {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("gameboard.txt"));
@@ -30,12 +33,13 @@ public class Board {
 
 			while ( ((c = br.read()) != -1) && i < board.length) {
 				char cc = (char)c;
-				if (cc == '\n') continue;
+				if (cc == '\n')				// buffered reader adds new line every so often, so did this to get 
+					continue;				// rid of it
 
 				name = String.valueOf(cc);
 				Position p = new Position(i, j);
-				Square sq = getSquare(name, p);
-				board[i][j++] = sq;
+				Square sq = getSquare(name, p);		// get the relevant Square
+				board[i][j++] = sq;						// put in board
 				if (j == board[i].length) {
 					j = 0;
 					i++;
@@ -50,6 +54,13 @@ public class Board {
 		}
 	}
 
+	/**
+	 * Gets the square based on the name read from the file.
+	 * This method only helps generates squares based on the format of the file being read in.
+	 * @param name
+	 * @param p
+	 * @return
+	 */
 	private Square getSquare(String name, Position p) {
 		Square sq;
 
@@ -69,15 +80,15 @@ public class Board {
 
 			SplayerName = Scurrent.name();
 		}
-		else {											//else if (name.equals("-")) {
-			sq = new RoomSquare(name, p);						//sq = new DoorSquare(name); }
+		else {										
+			sq = new RoomSquare(name, p);					
 		}
 
 		return sq;
 	}
 
 	/**
-	 *@return - String representation of this board
+	 *@return String representation of this board
 	 */
 	public String toString() {
 		String res = "";
@@ -96,10 +107,9 @@ public class Board {
 	}
 
 
-
 	/**
 	 * @param p
-	 * @return - the Square in the board that i associated with the given position
+	 * @return  the Square in the board that i associated with the given position
 	 */
 	public Square getSquareFromPosition(Position p) {
 		for (int i=0; i<board.length; i++) {

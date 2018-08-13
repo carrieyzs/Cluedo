@@ -12,11 +12,11 @@ public class Move {
 	 * @param diceRoll
 	 */
 	public Move(String moveSequence, int diceRoll) {
-		this.diceRoll = diceRoll;
-		
 		if (moveSequence.length() <= 1)			
 			throw new IllegalArgumentException("Invalid move sequence. Please make a correct move!");
-
+		
+		this.diceRoll = diceRoll;
+		
 		String modifiedSequence = validateMoveSequence(moveSequence);
 		this.moveSequence = modifiedSequence.split(",");
 
@@ -44,7 +44,6 @@ public class Move {
 		}
 
 		// checks for valid no. of steps
-		int skip;
 		for (int i=1; i<result.length(); i+=3) {
 			int step = Integer.parseInt(result.substring(i, i+1));		// throws NumberFormatException -- should handle this?..
 			sum += step;
@@ -79,20 +78,20 @@ public class Move {
 		int col = current.getCol();
 		boolean isValid = false;
 
-		switch(dir) {
-		case "U": case "u":
+		switch(dir) {										
+		case "U": case "u":			// one row up
 			isValid = (row==0) ? false : true;
-			row -= 1;
+			row -= 1;					
 			break;
-		case "D": case "d":
+		case "D": case "d":			// one row down
 			isValid = (row==Board.HEIGHT-1) ? false : true;
 			row += 1;
 			break;
-		case "L": case "l":
+		case "L": case "l":			// one column left
 			isValid = (col==0) ? false : true;
 			col -= 1;
 			break;
-		case "R": case "r":
+		case "R": case "r":			// one column right
 			isValid = (col==Board.WIDTH-1) ? false : true;
 			col += 1;
 		}

@@ -1,10 +1,21 @@
 
+/**
+ * The Square class corresponds to the different types of Square objects that make up the board.
+ * The subclasses are PlainSquare, StartingSquare and RoomSquare.
+ * @author Carrie
+ */
 public abstract class Square {
 	protected Position pos;
 	protected String letter;
 	protected boolean isOccupied, isAccessible;
 	protected Player player;
 
+	/**
+	 * Square holds information regarding its type (based on the letter initial given) and its position on the
+	 * board.
+	 * @param letter
+	 * @param pos
+	 */
 	public Square(String letter, Position pos) {
 		this.letter = letter;
 		this.pos = pos;
@@ -83,10 +94,10 @@ public abstract class Square {
 		if (from.toString().equals(" ") && (s instanceof RoomSquare))
 			throw new IllegalArgumentException("Can't move into a wall!");
 		
+		// check to move out of a wall (from RoomSquare to PlainSquare)
+		
 		if ((s instanceof RoomSquare) && ((RoomSquare)s).hasWeapon())
 			throw new IllegalArgumentException("Can't move there! Square is occupied by a weapon.");
-
-		
 
 		return true;
 	}

@@ -17,7 +17,7 @@ public class Player {
 		PROFESSOR_PLUM;
 
 		/**
-		 * @return - the next token clockwise from this PlayerToken (in order of play)
+		 * @return the next token clockwise from this PlayerToken (in order of play)
 		 */
 		public static PlayerToken getNext(PlayerToken current) {
 			if (current == PROFESSOR_PLUM)
@@ -39,8 +39,8 @@ public class Player {
 	/**
 	 * A player is created at the start of the game on their specific StartingSquare.
 	 * The starting location of the player must be on a StartingSquare.(?)
-	 * @param name - of player as entered by user
-	 * @param startLocation - StartingSquare to place player (which is also the token player takes)
+	 * @param name of player as entered by user
+	 * @param startLocation StartingSquare to place player (which is also the token player takes)
 	 */
 	public Player(String name, Square location, PlayerToken token) {
 		//Square.validateSquare(location);
@@ -53,28 +53,28 @@ public class Player {
 
 	// GETTERS
 		/**
-		 * @return - player's name as entered at the start
+		 * @return player's name as entered at the start
 		 */
 		public String getName() {
 			return this.name;
 		}
 
 		/**
-		 * @return - the square that the player currently occupies
+		 * @return the square that the player currently occupies
 		 */
 		public Square getSquare() {
 			return this.location;
 		}
 
 		/**
-		 * @return - corresponding player token
+		 * @return corresponding player token
 		 */
 		public PlayerToken getToken() {
 			return token;
 		}
 
 		/**
-		 * @return - player's hands
+		 * @return player's hands
 		 */
 		public Hand getHand() {
 			return hand;

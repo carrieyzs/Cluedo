@@ -13,7 +13,6 @@ public class Game {
 	List<Card> deck;
 	Card[] envelope;	// stores the 3 solution cards in the order: PlayerCard, WeaponCard, RoomCard
 	Player currentPlayer;			// Miss Scarlett always plays first;
-	Player nextPlayer;
 	Die dice;
 
 	// constant lists of positions to place players and weapons
@@ -67,7 +66,7 @@ public class Game {
 	/**
 	 * Checks whether the input from the user is valid for the game.
 	 * Number of players must be [3,6]
-	 * @param num - no. of players to check
+	 * @param num no. of players to check
 	 * @return
 	 */
 	public boolean validatePlayers(int num) {
@@ -80,11 +79,10 @@ public class Game {
 	}
 
 	/**
-	 * Initialiase the game: sets up the solution
+	 * Initialiase the game: sets up the game and players
 	 */
 	public void initialise() {
 		currentPlayer = players.get(0);
-		nextPlayer = players.get(1);
 		isPlaying = true;
 		envelope = Card.getSolution();
 		distributeCards();
@@ -113,7 +111,6 @@ public class Game {
 	 */
 	public void setWeapons() {
 		// gets the list of weapons and rooms
-
 		ArrayList<RoomSquare.Weapon> weapons = new ArrayList<RoomSquare.Weapon>(Arrays.asList(RoomSquare.Weapon.values()));
 		ArrayList<RoomSquare.Room> rooms = new ArrayList<RoomSquare.Room>(Arrays.asList(RoomSquare.Room.values()));
 
@@ -172,39 +169,39 @@ public class Game {
 			boolean isValid;
 			
 
-			do {
-						// gets player's move sequence
+			do {				// gets player's move sequence
 				try {
 					System.out.println("\nPlayer " + currentPlayer.getName() + " rolling dice...\n Dice value: "+ steps);
 					System.out.print("How do you want to move? : ");
-					m = new Move(reader.nextLine(), steps);			// try-catch?
+					m = new Move(reader.nextLine(), steps);		
 					isValid = true;
 					movePlayer(m);
 				}
 				catch (IllegalArgumentException e) {
 					isValid = false;
-					e.printStackTrace();
 					System.out.println("Oops! Try another move!");
 				}
 			}
-			while (!isValid);
+			while (!isValid);				// keep asking the user for valid input
 			
 			// move play along to other players
-			System.out.println("before switch :" + playerIndex);
-			//currentPlayer = nextPlayer;
-			//nextPlayer = players.get(playerIndex++);
 			currentPlayer = players.get(playerIndex++);
-			System.out.println("after switch :" + playerIndex);
-			
-			System.out.println("Player current: " + currentPlayer.getName());
 			if (playerIndex == players.size())			
 				playerIndex = 0;						// return play back to player 1
 			
 			System.out.println("\n" + gameboard.toString());
 			System.out.println("=================================================");
 		}
+		
+		reader.close();
 	}
 
+	/**
+	 * This method does an incremental check on the Squares involved in the move sequence, before moving the
+	 * player. When it reaches the end of the move sequence with no problems, the player is then moved to the 
+	 * final square.
+	 * @param m
+	 */
 	public void movePlayer(Move m) {
 		if (m == null)
 			throw new IllegalArgumentException("Move can't be null!");
@@ -228,14 +225,14 @@ public class Game {
 				
 				// if new position gives a room square, ask user for info for suggestion
 			}
+			
+			// when it reaches here, we know that all the squares in the sequence are valid
+			// so can put the player on that square
 			currentPlayer.move(gameboard.getSquareFromPosition(currentpos));
 		}
-		
-		// when it reaches here, we know that all the squares in the sequence are valid
-		// so can put the player on that square
-		
 	}
 
+	
 	public static void main(String[] args) {
 		new Game();
 	}

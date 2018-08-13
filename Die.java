@@ -10,7 +10,7 @@ public class Die {
 
 	/**
 	 * Creates a Die object.
-	 * @param numOfDice - no. of dice required
+	 * @param numOfDice no. of dice required
 	 */
 	public Die(int numOfDice) {
 		dice = new Integer[numOfDice][DICE_VALUES];
@@ -24,7 +24,7 @@ public class Die {
 
 	/**
 	 * This method generates random values from the dice to simulate a dice roll.
-	 * @return - the no. of steps player has to take during a move
+	 * @return the no. of steps player has to take during a move
 	 */
 	public int roll() {
 		int sum = 0;
