@@ -1,44 +1,38 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-	public Square[][] board; // 25 down, 24 across
-	private String playerNameAtStart = "MRS_WHITE"; // the name of the player designated for each StartingSquare,
-													// starting from the top
-
+	private Square[][] board;
+	
+	// the name of the player designated for each StartingSquare,
+	// starting from the top (as read in from the file)
+	private String SplayerName = "MRS_WHITE";
+	Player.PlayerToken Scurrent = Player.PlayerToken.valueOf(SplayerName);
+	List<StartingSquare> startingSquares;
+	
 	public Board() {
-		// reads the gameboard.txt file
-		// convert to square
-		// put in board
-
-		board = new Square[25][24];
+		board = new Square[25][24];			// 25 down, 24 across
 		createNewBoard();
 	}
 
-	public Square[][] createNewBoard() {
+	private void createNewBoard() {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("gameboard.txt"));
 			String name;
 
 			// Reads the list of squares into the board array
-			int i = 0, j = 0;
-			
-//			&& (i < board.length) && (j < board[i].length)
-			
-			int c;
+			int i = 0, j = 0, c;
 
 			while ( ((c = br.read()) != -1) && i < board.length) {
-
 				char cc = (char)c;
 				if (cc == '\n') continue;
+				
 				name = String.valueOf(cc);
-				Square sq = getSquare(name);
-
-				board[i][j] = sq;
-				j++;
+				Position p = new Position(i, j);
+				Square sq = getSquare(name, p);
+				board[i][j++] = sq;
 				if (j == board[i].length) {
 					j = 0;
 					i++;
@@ -51,39 +45,49 @@ public class Board {
 			System.out.println("File reading failed");
 			e.printStackTrace();
 		}
-
-		return board;
 	}
-
-	private Square getSquare(String name) {
+	
+	private Square getSquare(String name, Position p) {
 		Square sq;
 
-		if (name.equals("X") || name.equals(" ")) {
-			sq = new PlainSquare(name);
-		} else if (name.equals("S")) { // put player name in here and convert to string, store in playerNameAtStart
-			sq = new StartingSquare(name, playerNameAtStart);
-			// Player.PlayerToken p = Player.PlayerToken.valueOf(playerNameAtStart);
-			// playerNameAtStart = p.getNext().name(); // get next player
-		} else if (name.equals("-")) {
-			sq = new DoorSquare(name);
-		} else {
-			sq = new RoomSquare(name);
+		if (name.equals("X") || name.equals(" ") || name.equals("-")) {
+			sq = new PlainSquare(name, p);
+		}
+		else if (name.equals("S")) {
+			sq = new StartingSquare(name, p, SplayerName);
+			startingSquares.add((StartingSquare)sq);
+
+			// gets the next player's name as shown on the board
+			if (SplayerName.equals("MRS_PEACOCK"))
+				Scurrent = Player.PlayerToken.COLONEL_MUSTARD;
+			else if (SplayerName.equals("COLONEL_MUSTARD"))
+				Scurrent = Player.PlayerToken.PROFESSOR_PLUM;
+			else
+				Scurrent = Player.PlayerToken.getNext(Scurrent);
+
+			SplayerName = Scurrent.name();
+		}
+		else {											//else if (name.equals("-")) {
+			sq = new RoomSquare(name, p);						//sq = new DoorSquare(name); }
 		}
 
 		return sq;
 	}
 
+	/**
+	 *@return - String representation of this board
+	 */
 	public String toString() {
 		String res = "";
 
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				res += board[i][j].toString();
-				if (j == board[i].length-1) {
+				if (j == board[i].length-1) 
 					res += "\n";
-				}
+				
 			}
-			// res += "*";
+			
 		}
 
 		return res;
